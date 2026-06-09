@@ -1,0 +1,110 @@
+import React, { useState, useEffect } from 'react';
+import {
+  View, Text, FlatList, TouchableOpacity,
+  StyleSheet, ActivityIndicator,
+} from 'react-native';
+import { startupsAPI } from '../services/api';
+
+const BG    = '#08090c';
+const CARD  = '#111318';
+const LINE  = 'rgba(255,255,255,0.07)';
+const MUTED = 'rgba(255,255,255,0.35)';
+const WHITE = '#f4f2ee';
+
+export default function StartupsScreen({ navigation }) {
+  const [startups, setStartups] = useState([]);
+  const [loading, setLoading]   = useState(true);
+
+  useEffect(() => {
+    startupsAPI.getAll()
+      .then(d => setStartups(d.startups || []))
+      .catch(() => setStartups([]))
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) return <View style={s.center}><ActivityIndicator color={WHITE} /></View>;
+
+  if (startups.length === 0) {
+    return (
+      <View style={s.container}>
+        <View style={s.center}>
+          <View style={s.bubble}>
+            <Text style={s.bubbleIcon}>🚧</Text>
+            <Text style={s.bubbleTitle}>Bientôt disponible</Text>
+            <Text style={s.bubbleSub}>Les startups sélectionnées par{'\n'}LIQUID+ arrivent prochainement.</Text>
+          </View>
+        </View>
+      </View>
+    );
+  }
+
+  return (
+    <View style={s.container}>
+      <View style={s.header}>
+        <Text style={s.title}>Startups</Text>
+        <Text style={s.count}>{startups.length}</Text>
+      </View>
+      <FlatList
+        data={startups}
+        keyExtractor={item => String(item.id)}
+        renderItem={({ item, index }) => (
+          <Row startup={item} last={index === startups.length - 1}
+            onPress={() => navigation.navigate('StartupDetail', { startup: item })} />
+        )}
+        contentContainerStyle={{ paddingBottom: 40 }}
+        showsVerticalScrollIndicator={false}
+      />
+    </View>
+  );
+}
+
+function Row({ startup, last, onPress }) {
+  return (
+    <TouchableOpacity style={[s.row, !last && s.rowBorder]} onPress={onPress} activeOpacity={0.6}>
+      <View style={[s.logo, { backgroundColor: startup.color || '#1a1d24' }]}>
+        <Text style={s.logoTxt}>{startup.emoji || startup.name[0]}</Text>
+      </View>
+      <View style={s.info}>
+        <Text style={s.name}>{startup.name}</Text>
+        <Text style={s.sub}>{startup.sector}</Text>
+      </View>
+      <View style={s.right}>
+        <Text style={s.ticket}>{startup.ticket}</Text>
+        <View style={[s.dot, { backgroundColor: startup.open ? '#16a34a' : LINE }]} />
+      </View>
+    </TouchableOpacity>
+  );
+}
+
+const s = StyleSheet.create({
+  container: { flex: 1, backgroundColor: BG },
+  center:    { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: BG },
+  errorTxt:  { fontSize: 13, color: MUTED },
+
+  bubble:      { backgroundColor: 'rgba(255,255,255,0.06)', borderWidth: 1, borderColor: LINE, borderRadius: 24, paddingHorizontal: 36, paddingVertical: 36, alignItems: 'center', gap: 10, maxWidth: 280 },
+  bubbleIcon:  { fontSize: 32, marginBottom: 4 },
+  bubbleTitle: { fontSize: 16, fontWeight: '800', color: WHITE, textAlign: 'center' },
+  bubbleSub:   { fontSize: 13, color: MUTED, textAlign: 'center', lineHeight: 20 },
+
+  header: {
+    paddingHorizontal: 20, paddingTop: 52, paddingBottom: 20,
+    borderBottomWidth: 1, borderBottomColor: LINE,
+    flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between',
+  },
+  title: { fontSize: 28, fontWeight: '800', color: WHITE },
+  count: { fontSize: 13, color: MUTED, fontWeight: '600' },
+
+  row:       { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 16, gap: 14 },
+  rowBorder: { borderBottomWidth: 1, borderBottomColor: LINE },
+
+  logo:    { width: 44, height: 44, borderRadius: 12, alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
+  logoTxt: { fontSize: 18, fontWeight: '800', color: '#fff' },
+
+  info:    { flex: 1 },
+  name:    { fontSize: 15, fontWeight: '700', color: WHITE },
+  sub:     { fontSize: 12, color: MUTED, marginTop: 2 },
+
+  right:   { alignItems: 'flex-end', gap: 6 },
+  ticket:  { fontSize: 12, fontWeight: '600', color: MUTED, fontVariant: ['tabular-nums'] },
+  dot:     { width: 7, height: 7, borderRadius: 4 },
+});
