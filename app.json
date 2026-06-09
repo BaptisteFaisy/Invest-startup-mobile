@@ -31,6 +31,12 @@
     "scheme": "liquidplus",
     "plugins": [
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "69556080-2357-48bc-b8e8-2ee73941a0ef"
+      }
+    },
+    "owner": "liquidplus"
   }
 }
