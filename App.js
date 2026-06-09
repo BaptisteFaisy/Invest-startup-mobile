@@ -2,8 +2,6 @@ import React from 'react';
 import { Text, View, ActivityIndicator } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import * as WebBrowser from 'expo-web-browser';
-
-WebBrowser.maybeCompleteAuthSession();
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import {
@@ -22,6 +20,8 @@ import {
 } from '@expo-google-fonts/archivo';
 import { AuthProvider } from './src/contexts/AuthContext';
 import AppNavigator from './src/navigation/AppNavigator';
+
+WebBrowser.maybeCompleteAuthSession();
 
 // Applique Libre Franklin sur tous les Text de l'app (identique au site)
 if (!Text.defaultProps) Text.defaultProps = {};
