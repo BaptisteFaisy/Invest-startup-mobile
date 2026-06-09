@@ -3,6 +3,7 @@ import {
   View, Text, ScrollView, TouchableOpacity, TextInput,
   StyleSheet,
 } from 'react-native';
+import Slider from '@react-native-community/slider';
 
 const BG    = '#08090c';
 const CARD  = '#111318';
@@ -224,11 +225,40 @@ export default function FeeCalculatorScreen() {
               style={s.amountInput}
               value={amountText}
               onChangeText={v => { setAmountText(v); const n = parseInt(v, 10); if (!isNaN(n) && n >= 100) setAmount(n); }}
-              onBlur={() => { const v = Math.max(100, Math.min(10000000, parseInt(amountText, 10) || 50000)); setAmount(v); setAmountText(String(v)); }}
+              onBlur={() => { const v = Math.max(1000, Math.min(1000000, parseInt(amountText, 10) || 50000)); setAmount(v); setAmountText(String(v)); }}
               keyboardType="numeric"
               returnKeyType="done"
             />
             <Text style={s.amountEuro}>€</Text>
+          </View>
+          <View style={s.sliderWrap}>
+            <Slider
+              style={s.slider}
+              minimumValue={1000}
+              maximumValue={1000000}
+              step={1000}
+              value={amount}
+              onValueChange={v => { setAmount(v); setAmountText(String(v)); }}
+              minimumTrackTintColor="#f4f2ee"
+              maximumTrackTintColor="rgba(255,255,255,0.12)"
+              thumbTintColor="#f4f2ee"
+            />
+            <View style={s.sliderLabels}>
+              <Text style={s.sliderMin}>1 k€</Text>
+              <Text style={s.sliderMax}>1 M€</Text>
+            </View>
+          </View>
+          <View style={s.presetsRow}>
+            {PRESETS.map(p => (
+              <TouchableOpacity
+                key={p}
+                style={[s.preset, amount === p && s.presetActive]}
+                onPress={() => { setAmount(p); setAmountText(String(p)); }}
+                activeOpacity={0.7}
+              >
+                <Text style={[s.presetTxt, amount === p && s.presetTxtActive]}>{fmtAmt(p)}</Text>
+              </TouchableOpacity>
+            ))}
           </View>
         </View>
 
@@ -514,6 +544,18 @@ const s = StyleSheet.create({
   amountRow:   { flexDirection: 'row', alignItems: 'baseline', gap: 6 },
   amountInput: { fontSize: 36, fontWeight: '900', color: WHITE, padding: 0, minWidth: 120, fontVariant: ['tabular-nums'] },
   amountEuro:  { fontSize: 22, fontWeight: '700', color: MUTED },
+
+  sliderWrap:   { marginTop: 8, gap: 4 },
+  slider:        { width: '100%', height: 36 },
+  sliderLabels:  { flexDirection: 'row', justifyContent: 'space-between', marginTop: -4 },
+  sliderMin:     { fontSize: 10, color: MUTED, fontWeight: '600' },
+  sliderMax:     { fontSize: 10, color: MUTED, fontWeight: '600' },
+
+  presetsRow:   { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 6 },
+  preset:       { paddingHorizontal: 12, paddingVertical: 6, borderRadius: 999, borderWidth: 1, borderColor: LINE, backgroundColor: CARD },
+  presetActive: { backgroundColor: WHITE, borderColor: WHITE },
+  presetTxt:    { fontSize: 12, fontWeight: '600', color: MUTED },
+  presetTxtActive: { color: BG, fontWeight: '700' },
 
   // Rendement + Horizon
   rowBlock:  { flexDirection: 'row', gap: 20 },
