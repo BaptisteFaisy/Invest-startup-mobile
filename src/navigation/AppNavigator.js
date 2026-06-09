@@ -115,8 +115,10 @@ export default function AppNavigator() {
         screenOptions={{
           swipeEnabled: true,
           animationEnabled: true,
-          tabBarIndicatorStyle: { height: 0 },
-          tabBarStyle: { height: 0 },
+          tabBarIndicatorStyle: { height: 0, backgroundColor: 'transparent' },
+          tabBarStyle: { height: 0, overflow: 'hidden' },
+          tabBarPressColor: 'transparent',
+          tabBarPressOpacity: 1,
         }}
       >
         <Tab.Screen name="Investissement" component={HomeStack}    />
