@@ -217,6 +217,38 @@ export default function FeeCalculatorScreen() {
 
       <View style={s.body}>
 
+        {/* ── Graphique barres ── */}
+        <View style={s.block}>
+          <Text style={s.blockLabel}>FRAIS TOTAUX EN {effectiveYears} ANS</Text>
+          <View style={s.barsContainer}>
+            {visCos.map((co, i) => {
+              const r     = visRes[i];
+              const color = co.name === 'LIQUID+' ? WHITE : visCols[i];
+              if (amount < co.minAmount) {
+                return (
+                  <View key={i} style={s.barCol}>
+                    <View style={s.barMinWrap}>
+                      <Text style={s.barMinTxt}>Min.{'\n'}{fmtAmt(co.minAmount)}</Text>
+                    </View>
+                    <Text style={s.barName}>{co.name}</Text>
+                  </View>
+                );
+              }
+              const barMaxH = 140;
+              const h = Math.max(8, Math.round((r.total / maxTotal) * barMaxH));
+              return (
+                <View key={i} style={s.barCol}>
+                  <View style={[s.barWrapper, { height: barMaxH }]}>
+                    <Text style={[s.barValue, { color }]}>{fmt(r.total)}</Text>
+                    <View style={[s.bar, { height: h, backgroundColor: color }]} />
+                  </View>
+                  <Text style={[s.barName, co.name === 'LIQUID+' && s.barNameLiquid]}>{co.name}</Text>
+                </View>
+              );
+            })}
+          </View>
+        </View>
+
         {/* ── Montant ── */}
         <View style={s.block}>
           <Text style={s.blockLabel}>MONTANT INVESTI</Text>
@@ -377,38 +409,6 @@ export default function FeeCalculatorScreen() {
           )}
         </View>
 
-        {/* ── Graphique barres ── */}
-        <View style={s.block}>
-          <Text style={s.blockLabel}>FRAIS TOTAUX EN {effectiveYears} ANS</Text>
-          <View style={s.barsContainer}>
-            {visCos.map((co, i) => {
-              const r     = visRes[i];
-              const color = co.name === 'LIQUID+' ? WHITE : visCols[i];
-              if (amount < co.minAmount) {
-                return (
-                  <View key={i} style={s.barCol}>
-                    <View style={s.barMinWrap}>
-                      <Text style={s.barMinTxt}>Min.{'\n'}{fmtAmt(co.minAmount)}</Text>
-                    </View>
-                    <Text style={s.barName}>{co.name}</Text>
-                  </View>
-                );
-              }
-              const barMaxH = 140;
-              const h = Math.max(8, Math.round((r.total / maxTotal) * barMaxH));
-              return (
-                <View key={i} style={s.barCol}>
-                  <View style={[s.barWrapper, { height: barMaxH }]}>
-                    <Text style={[s.barValue, { color }]}>{fmt(r.total)}</Text>
-                    <View style={[s.bar, { height: h, backgroundColor: color }]} />
-                  </View>
-                  <Text style={[s.barName, co.name === 'LIQUID+' && s.barNameLiquid]}>{co.name}</Text>
-                </View>
-              );
-            })}
-          </View>
-        </View>
-
         {/* ── Tableau comparatif ── */}
         <View style={s.block}>
           <Text style={s.blockLabel}>DÉTAIL DES FRAIS</Text>
@@ -444,7 +444,7 @@ export default function FeeCalculatorScreen() {
 
             {/* Économies */}
             <View style={[s.tRow, s.tSavingRow]}>
-              <Text style={[s.tCell, s.tLabelCell, s.tSavingLabel]}>▲ Économies réalisées avec LIQUID+</Text>
+              <Text style={[s.tCell, s.tLabelCell, s.tSavingLabel]}>Économies réalisées avec LIQUID+</Text>
               {visRes.map((r, i) => {
                 if (visCos[i].name === 'LIQUID+') return <Text key={i} style={[s.tCell, s.tSavingValue]}>Référence</Text>;
                 if (r === null || liquidRes === null || amount < visCos[i].minAmount) return <Text key={i} style={[s.tCell, s.tSavingValue]}>—</Text>;
@@ -614,7 +614,7 @@ const s = StyleSheet.create({
   tDataRow:     { borderBottomWidth: 1, borderBottomColor: LINE },
   tDataRowThick:{ borderBottomWidth: 2, borderBottomColor: LINE },
   tTotalRow:  { borderTopWidth: 2, borderTopColor: LINE, backgroundColor: 'rgba(255,255,255,0.03)' },
-  tSavingRow: { backgroundColor: UP_BG },
+  tSavingRow: { backgroundColor: 'rgba(74,222,128,0.03)' },
   tCell:      { flex: 1, paddingHorizontal: 10, paddingVertical: 10, justifyContent: 'center' },
   tLabelCell: { flex: 1.2 },
   tRowLabel:  { fontSize: 11, color: MUTED },
