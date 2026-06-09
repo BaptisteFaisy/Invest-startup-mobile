@@ -95,6 +95,12 @@ export const profileAPI = {
     request('/api/auth/profile', { method: 'PUT', body: JSON.stringify({ full_name, email }) }),
 };
 
+// Password
+export const passwordAPI = {
+  change: (currentPassword, newPassword) =>
+    request('/api/auth/password', { method: 'PUT', body: JSON.stringify({ currentPassword, newPassword }) }),
+};
+
 // 2FA
 export const twoFAAPI = {
   status:  () => request('/api/auth/2fa/status'),

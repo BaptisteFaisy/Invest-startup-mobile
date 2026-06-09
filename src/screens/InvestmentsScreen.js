@@ -40,6 +40,18 @@ export default function InvestmentsScreen({ navigation }) {
   const totalGain     = totalValue - totalInvested;
   const totalPct      = totalInvested > 0 ? ((totalGain / totalInvested) * 100).toFixed(1) : '0';
 
+  if (investments.length === 0) {
+    return (
+      <View style={s.center}>
+        <View style={s.bubble}>
+          <Text style={s.bubbleIcon}>📊</Text>
+          <Text style={s.bubbleTitle}>Vous n'avez pas encore investi</Text>
+          <Text style={s.bubbleSub}>Vos investissements apparaîtront{'\n'}ici dès votre premier placement.</Text>
+        </View>
+      </View>
+    );
+  }
+
   return (
     <ScrollView style={s.container} showsVerticalScrollIndicator={false}>
 
@@ -128,6 +140,11 @@ const s = StyleSheet.create({
   lockTitle: { fontSize: 17, fontWeight: '700', color: colors.text, textAlign: 'center', lineHeight: 26 },
   loginBtn:  { backgroundColor: colors.accentBtn, borderRadius: 999, paddingVertical: 14, paddingHorizontal: 32 },
   loginBtnTxt:{ color: '#fff', fontWeight: '700', fontSize: 15 },
+
+  bubble:      { backgroundColor: 'rgba(255,255,255,0.05)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.07)', borderRadius: 24, paddingHorizontal: 36, paddingVertical: 36, alignItems: 'center', gap: 10, maxWidth: 280 },
+  bubbleIcon:  { fontSize: 32, marginBottom: 4 },
+  bubbleTitle: { fontSize: 16, fontWeight: '800', color: '#f4f2ee', textAlign: 'center' },
+  bubbleSub:   { fontSize: 13, color: 'rgba(255,255,255,0.35)', textAlign: 'center', lineHeight: 20 },
 
   summary: {
     backgroundColor: colors.bgDark,

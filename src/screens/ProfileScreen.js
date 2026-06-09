@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../contexts/AuthContext';
-import { twoFAAPI } from '../services/api';
+import { twoFAAPI, passwordAPI } from '../services/api';
 
 const BG    = '#08090c';
 const CARD  = '#111318';
@@ -31,6 +31,16 @@ export default function ProfileScreen() {
   const [editEmail, setEditEmail] = useState('');
   const [saving,    setSaving]    = useState(false);
   const [saveError, setSaveError] = useState(null);
+
+  const [pwdOpen,      setPwdOpen]      = useState(false);
+  const [currentPwd,   setCurrentPwd]   = useState('');
+  const [newPwd,       setNewPwd]       = useState('');
+  const [confirmPwd,   setConfirmPwd]   = useState('');
+  const [showCurrent,  setShowCurrent]  = useState(false);
+  const [showNew,      setShowNew]      = useState(false);
+  const [pwdSaving,    setPwdSaving]    = useState(false);
+  const [pwdError,     setPwdError]     = useState(null);
+  const [pwdSuccess,   setPwdSuccess]   = useState(false);
 
   const [twoFAEnabled,     setTwoFAEnabled]     = useState(false);
   const [twoFALoading,     setTwoFALoading]     = useState(true);
@@ -87,6 +97,22 @@ export default function ProfileScreen() {
       setCodeError(e.message);
     }
     setConfirmLoading(false);
+  }
+
+  async function savePassword() {
+    if (!currentPwd || !newPwd) { setPwdError('Remplissez tous les champs.'); return; }
+    if (newPwd.length < 6) { setPwdError('6 caractères minimum.'); return; }
+    if (newPwd !== confirmPwd) { setPwdError('Les mots de passe ne correspondent pas.'); return; }
+    setPwdSaving(true); setPwdError(null); setPwdSuccess(false);
+    try {
+      await passwordAPI.change(currentPwd, newPwd);
+      setPwdSuccess(true);
+      setCurrentPwd(''); setNewPwd(''); setConfirmPwd('');
+      setTimeout(() => { setPwdOpen(false); setPwdSuccess(false); }, 1500);
+    } catch (e) {
+      setPwdError(e.message);
+    }
+    setPwdSaving(false);
   }
 
   function disable2FA() {
@@ -166,6 +192,65 @@ export default function ProfileScreen() {
         </View>
       </View>
 
+      {/* ── MOT DE PASSE ── */}
+      <View style={s.section}>
+        <View style={s.sectionHeader}>
+          <Text style={s.sectionLabel}>MOT DE PASSE</Text>
+          {!pwdOpen && (
+            <TouchableOpacity style={s.editBtn} onPress={() => { setPwdOpen(true); setPwdError(null); setPwdSuccess(false); }}>
+              <Ionicons name="pencil-outline" size={13} color={MUTED} />
+              <Text style={s.editBtnTxt}>Modifier</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+        <View style={s.card}>
+          {!pwdOpen ? (
+            <View style={s.row}>
+              <Text style={s.rowLabel}>Mot de passe</Text>
+              <Text style={s.rowValue}>••••••••</Text>
+            </View>
+          ) : (
+            <>
+              {[
+                { label: 'ACTUEL',      value: currentPwd, set: setCurrentPwd, show: showCurrent, toggle: () => setShowCurrent(v => !v) },
+                { label: 'NOUVEAU',     value: newPwd,     set: setNewPwd,     show: showNew,     toggle: () => setShowNew(v => !v) },
+                { label: 'CONFIRMER',   value: confirmPwd, set: setConfirmPwd, show: showNew,     toggle: null },
+              ].map((f, i, arr) => (
+                <View key={f.label} style={[s.editField, i < arr.length - 1 && s.rowBorder]}>
+                  <Text style={s.rowLabel}>{f.label}</Text>
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <TextInput
+                      style={[s.editInput, { flex: 1 }]}
+                      value={f.value}
+                      onChangeText={f.set}
+                      secureTextEntry={!f.show}
+                      placeholder="••••••••"
+                      placeholderTextColor={MUTED}
+                      autoCapitalize="none"
+                    />
+                    {f.toggle && (
+                      <TouchableOpacity onPress={f.toggle} style={{ paddingLeft: 8 }}>
+                        <Ionicons name={f.show ? 'eye-off' : 'eye'} size={18} color={MUTED} />
+                      </TouchableOpacity>
+                    )}
+                  </View>
+                </View>
+              ))}
+              {pwdError   ? <Text style={s.errorTxt}>{pwdError}</Text>   : null}
+              {pwdSuccess ? <Text style={[s.errorTxt, { color: GREEN }]}>Mot de passe modifié ✓</Text> : null}
+              <View style={s.actions}>
+                <TouchableOpacity style={s.cancelBtn} onPress={() => { setPwdOpen(false); setCurrentPwd(''); setNewPwd(''); setConfirmPwd(''); }}>
+                  <Text style={s.cancelTxt}>Annuler</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={s.saveBtn} onPress={savePassword} disabled={pwdSaving}>
+                  {pwdSaving ? <ActivityIndicator color={BG} size="small" /> : <Text style={s.saveTxt}>Enregistrer</Text>}
+                </TouchableOpacity>
+              </View>
+            </>
+          )}
+        </View>
+      </View>
+
       {/* ── SÉCURITÉ ── */}
       <View style={s.section}>
         <Text style={s.sectionLabel}>SÉCURITÉ</Text>
@@ -195,11 +280,11 @@ export default function ProfileScreen() {
             <View style={s.setupBox}>
               <Text style={s.setupStep}>1. Scanne ce QR avec Google Authenticator</Text>
               <Image
-                source={{ uri: `https://api.qrserver.com/v1/create-qr-code/?size=220x220&color=f4f2ee&bgcolor=111318&data=${encodeURIComponent(setupData.otpauth)}` }}
+                source={{ uri: setupData.qr }}
                 style={s.qrCode}
               />
               <Text style={s.secretLabel}>Code manuel :</Text>
-              <Text style={s.secret}>{setupData.secret}</Text>
+              <Text style={s.secret} selectable>{setupData.secret}</Text>
 
               <Text style={[s.setupStep, { marginTop: 20 }]}>2. Entre le code à 6 chiffres</Text>
               <TextInput
