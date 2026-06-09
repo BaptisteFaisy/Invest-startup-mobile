@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  View, Text, FlatList, TouchableOpacity,
+  View, Text, Image, FlatList, TouchableOpacity,
   StyleSheet, ActivityIndicator,
 } from 'react-native';
 import { startupsAPI } from '../services/api';
@@ -26,13 +26,15 @@ export default function StartupsScreen({ navigation }) {
 
   if (startups.length === 0) {
     return (
-      <View style={s.container}>
-        <View style={s.center}>
-          <View style={s.bubble}>
-            <Text style={s.bubbleIcon}>🚧</Text>
-            <Text style={s.bubbleTitle}>Bientôt disponible</Text>
-            <Text style={s.bubbleSub}>Les startups sélectionnées par{'\n'}LIQUID+ arrivent prochainement.</Text>
-          </View>
+      <View style={s.emptyContainer}>
+        <View style={s.brand}>
+          <Image source={require('../../assets/goutte.png')} style={s.brandImg} />
+          <Text style={s.brandTxt}>LIQUID+</Text>
+        </View>
+        <View style={s.bubble}>
+          <Text style={s.bubbleIcon}>🚧</Text>
+          <Text style={s.bubbleTitle}>Bientôt disponible</Text>
+          <Text style={s.bubbleSub}>Les startups sélectionnées par{'\n'}LIQUID+ arrivent prochainement.</Text>
         </View>
       </View>
     );
@@ -77,13 +79,18 @@ function Row({ startup, last, onPress }) {
 }
 
 const s = StyleSheet.create({
-  container: { flex: 1, backgroundColor: BG },
-  center:    { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: BG },
-  errorTxt:  { fontSize: 13, color: MUTED },
+  container:      { flex: 1, backgroundColor: BG },
+  center:         { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: BG },
+  emptyContainer: { flex: 1, backgroundColor: BG, alignItems: 'center', justifyContent: 'center', gap: 40, padding: 24 },
+  errorTxt:       { fontSize: 13, color: MUTED },
 
-  bubble:      { backgroundColor: 'rgba(255,255,255,0.06)', borderWidth: 1, borderColor: LINE, borderRadius: 24, paddingHorizontal: 36, paddingVertical: 36, alignItems: 'center', gap: 10, maxWidth: 280 },
+  brand:    { flexDirection: 'row', alignItems: 'center', gap: 10, opacity: 0.5 },
+  brandImg: { width: 28, height: 28, resizeMode: 'contain' },
+  brandTxt: { fontFamily: 'Archivo_700Bold', fontSize: 16, fontWeight: '700', letterSpacing: 3, color: WHITE, textTransform: 'uppercase' },
+
+  bubble:      { backgroundColor: 'rgba(255,255,255,0.06)', borderWidth: 1, borderColor: LINE, borderRadius: 24, paddingHorizontal: 36, paddingVertical: 36, maxWidth: 280, width: '100%', alignItems: 'center', gap: 10 },
   bubbleIcon:  { fontSize: 32, marginBottom: 4 },
-  bubbleTitle: { fontSize: 16, fontWeight: '800', color: WHITE, textAlign: 'center' },
+  bubbleTitle: { fontSize: 16, fontWeight: '800', color: WHITE, textAlign: 'center', letterSpacing: -0.2 },
   bubbleSub:   { fontSize: 13, color: MUTED, textAlign: 'center', lineHeight: 20 },
 
   header: {

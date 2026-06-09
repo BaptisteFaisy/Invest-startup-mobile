@@ -10,14 +10,12 @@ import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuth } from '../contexts/AuthContext';
 
-import HomeScreen          from '../screens/HomeScreen';
 import StartupsScreen      from '../screens/StartupsScreen';
 import StartupDetailScreen from '../screens/StartupDetailScreen';
 import InvestmentsScreen   from '../screens/InvestmentsScreen';
 import ProfileScreen       from '../screens/ProfileScreen';
 import LoginScreen         from '../screens/LoginScreen';
 import RegisterScreen      from '../screens/RegisterScreen';
-import HowItWorksScreen    from '../screens/HowItWorksScreen';
 import FeeCalculatorScreen from '../screens/FeeCalculatorScreen';
 
 const BG    = '#08090c';
@@ -30,7 +28,6 @@ const Stack = createNativeStackNavigator();
 const Tab   = createMaterialTopTabNavigator();
 
 const TABS = [
-  { name: 'Accueil',         label: 'Accueil',          icon: 'home-outline'        },
   { name: 'Investissements', label: 'Investissements',  icon: 'trending-up-outline' },
   { name: 'Startups',        label: 'Startups',         icon: 'rocket-outline'      },
   { name: 'Frais',           label: 'Frais',            icon: 'calculator-outline'  },
@@ -100,15 +97,6 @@ const headerDark = {
   headerTitleStyle:    { fontWeight: '700', fontSize: 16, color: WHITE },
 };
 
-function HomeStack() {
-  return (
-    <Stack.Navigator screenOptions={headerDark}>
-      <Stack.Screen name="Home"       component={HomeScreen}       options={{ headerShown: false }} />
-      <Stack.Screen name="HowItWorks" component={HowItWorksScreen} options={{ title: 'Comment ça fonctionne' }} />
-    </Stack.Navigator>
-  );
-}
-
 function StartupsStack() {
   return (
     <Stack.Navigator screenOptions={headerDark}>
@@ -156,7 +144,6 @@ export default function AppNavigator() {
           tabBarPressColor:      'transparent',
         }}
       >
-        <Tab.Screen name="Accueil"         component={HomeStack}         />
         <Tab.Screen name="Investissements" component={InvestmentsScreen} />
         <Tab.Screen name="Startups"        component={StartupsStack}     />
         <Tab.Screen name="Frais"           component={FeesStack}         />
