@@ -4,11 +4,11 @@ import {
   StyleSheet, Linking,
 } from 'react-native';
 
-const BG    = '#08090c';
-const CARD  = '#111318';
-const LINE  = 'rgba(255,255,255,0.07)';
-const MUTED = 'rgba(255,255,255,0.35)';
-const WHITE = '#f4f2ee';
+const BG    = '#f5f4f0';
+const CARD  = '#ffffff';
+const LINE  = 'rgba(0,0,0,0.08)';
+const MUTED = 'rgba(0,0,0,0.4)';
+const WHITE = '#09090b';
 
 function InfoRow({ label, value, last }) {
   return (
@@ -121,8 +121,8 @@ const d = StyleSheet.create({
   tagline: { fontSize: 12, color: MUTED, marginTop: 2, lineHeight: 17 },
 
   openBadge:  { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 6, backgroundColor: 'rgba(22,163,74,0.15)', borderWidth: 1, borderColor: 'rgba(22,163,74,0.3)' },
-  openTxt:    { fontSize: 11, fontWeight: '700', color: '#4ade80' },
-  closedBadge:{ paddingHorizontal: 10, paddingVertical: 4, borderRadius: 6, backgroundColor: 'rgba(255,255,255,0.05)', borderWidth: 1, borderColor: LINE },
+  openTxt:    { fontSize: 11, fontWeight: '700', color: '#16a34a' },
+  closedBadge:{ paddingHorizontal: 10, paddingVertical: 4, borderRadius: 6, backgroundColor: 'rgba(0,0,0,0.05)', borderWidth: 1, borderColor: LINE },
   closedTxt:  { fontSize: 11, fontWeight: '600', color: MUTED },
 
   card:      { marginHorizontal: 20, marginTop: 20, backgroundColor: CARD, borderRadius: 14, borderWidth: 1, borderColor: LINE, overflow: 'hidden' },

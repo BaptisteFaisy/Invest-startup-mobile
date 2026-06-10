@@ -6,21 +6,18 @@ const WHITE = '#09090b';
 const MUTED = 'rgba(0,0,0,0.4)';
 const LINE  = 'rgba(0,0,0,0.08)';
 
-export default function InvestmentsScreen() {
+export default function SecondaryMarketScreen() {
   return (
     <View style={s.container}>
-
       <View style={s.logo}>
         <Image source={require('../../assets/goutte.png')} style={s.logoImg} />
         <Text style={s.logoTxt}>LIQUID+</Text>
       </View>
-
       <View style={s.card}>
-        <Text style={s.emoji}>📊</Text>
-        <Text style={s.title}>Vous n'avez pas encore investi</Text>
-        <Text style={s.sub}>Vos investissements apparaîtront{'\n'}ici dès votre premier placement.</Text>
+        <Text style={s.emoji}>🔄</Text>
+        <Text style={s.title}>Marché secondaire</Text>
+        <Text style={s.sub}>La revente de parts entre investisseurs{'\n'}arrive prochainement.</Text>
       </View>
-
     </View>
   );
 }
@@ -34,24 +31,12 @@ const s = StyleSheet.create({
     gap: 40,
     padding: 24,
   },
-
-  logo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
+  logo:    { flexDirection: 'row', alignItems: 'center', gap: 10 },
   logoImg: { width: 28, height: 28, resizeMode: 'contain', tintColor: WHITE },
-  logoTxt: {
-    fontFamily: 'Archivo_700Bold',
-    fontSize: 16,
-    fontWeight: '700',
-    letterSpacing: 3,
-    color: WHITE,
-    textTransform: 'uppercase',
-  },
+  logoTxt: { fontFamily: 'Archivo_700Bold', fontSize: 16, fontWeight: '700', letterSpacing: 3, color: WHITE, textTransform: 'uppercase' },
 
   card: {
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: '#ffffff',
     borderWidth: 1,
     borderColor: LINE,
     borderRadius: 24,

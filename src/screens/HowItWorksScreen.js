@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 
-const BG    = '#08090c';
-const CARD  = '#111318';
-const LINE  = 'rgba(255,255,255,0.07)';
-const MUTED = 'rgba(255,255,255,0.35)';
-const WHITE = '#f4f2ee';
+const BG    = '#f5f4f0';
+const CARD  = '#ffffff';
+const LINE  = 'rgba(0,0,0,0.08)';
+const MUTED = 'rgba(0,0,0,0.4)';
+const WHITE = '#09090b';
 
 const ITEMS = [
   { n: '01', title: 'Sélection des dossiers',  body: 'Chaque startup a été analysée par notre équipe : modèle économique, équipe fondatrice, traction, marché adressable.' },

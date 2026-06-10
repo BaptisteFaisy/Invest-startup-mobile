@@ -5,11 +5,11 @@ import {
 } from 'react-native';
 import { startupsAPI } from '../services/api';
 
-const BG    = '#08090c';
-const CARD  = '#111318';
-const LINE  = 'rgba(255,255,255,0.07)';
-const MUTED = 'rgba(255,255,255,0.35)';
-const WHITE = '#f4f2ee';
+const BG    = '#f5f4f0';
+const CARD  = '#ffffff';
+const LINE  = 'rgba(0,0,0,0.08)';
+const MUTED = 'rgba(0,0,0,0.4)';
+const WHITE = '#09090b';
 
 export default function StartupsScreen({ navigation }) {
   const [startups, setStartups] = useState([]);
@@ -84,8 +84,8 @@ const s = StyleSheet.create({
   emptyContainer: { flex: 1, backgroundColor: BG, alignItems: 'center', justifyContent: 'center', gap: 40, padding: 24 },
   errorTxt:       { fontSize: 13, color: MUTED },
 
-  brand:    { flexDirection: 'row', alignItems: 'center', gap: 10, opacity: 0.5 },
-  brandImg: { width: 28, height: 28, resizeMode: 'contain' },
+  brand:    { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  brandImg: { width: 28, height: 28, resizeMode: 'contain', tintColor: '#09090b' },
   brandTxt: { fontFamily: 'Archivo_700Bold', fontSize: 16, fontWeight: '700', letterSpacing: 3, color: WHITE, textTransform: 'uppercase' },
 
   bubble:      { backgroundColor: 'rgba(255,255,255,0.06)', borderWidth: 1, borderColor: LINE, borderRadius: 24, paddingHorizontal: 36, paddingVertical: 36, maxWidth: 280, width: '100%', alignItems: 'center', gap: 10 },

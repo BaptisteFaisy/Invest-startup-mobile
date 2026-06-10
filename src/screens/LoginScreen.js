@@ -8,11 +8,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../contexts/AuthContext';
 import { OAUTH_BASE_URL } from '../services/api';
 
-const BG    = '#08090c';
-const CARD  = '#111318';
-const LINE  = 'rgba(255,255,255,0.07)';
-const MUTED = 'rgba(255,255,255,0.35)';
-const WHITE = '#f4f2ee';
+const BG    = '#f5f4f0';
+const CARD  = '#ffffff';
+const LINE  = 'rgba(0,0,0,0.08)';
+const MUTED = 'rgba(0,0,0,0.4)';
+const WHITE = '#09090b';
 
 export default function LoginScreen({ navigation }) {
   const { login, googleLogin } = useAuth();

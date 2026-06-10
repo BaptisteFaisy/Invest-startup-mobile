@@ -5,13 +5,13 @@ import {
 } from 'react-native';
 import Slider from '@react-native-community/slider';
 
-const BG    = '#08090c';
-const CARD  = '#111318';
-const LINE  = 'rgba(255,255,255,0.07)';
-const MUTED = 'rgba(255,255,255,0.35)';
-const WHITE = '#f4f2ee';
-const UP    = '#4ade80';
-const UP_BG = 'rgba(74,222,128,0.1)';
+const BG    = '#f5f4f0';
+const CARD  = '#ffffff';
+const LINE  = 'rgba(0,0,0,0.08)';
+const MUTED = 'rgba(0,0,0,0.4)';
+const WHITE = '#09090b';
+const UP    = '#16a34a';
+const UP_BG = 'rgba(22,163,74,0.1)';
 
 // ── Logique frais (identique au site) ──────────────────────────────────────
 
@@ -207,7 +207,7 @@ export default function FeeCalculatorScreen() {
         <Text style={s.heroTitle}>Calculateur de frais</Text>
         <View style={s.pillRow}>
           <View style={s.pillGreen}>
-            <Text style={s.pillGreenTxt}>La plateforme avec le moins de frais au monde</Text>
+            <Text style={s.pillGreenTxt}>La plateforme avec le moins de frais en France</Text>
           </View>
           <View style={s.pillMuted}>
             <Text style={s.pillMutedTxt}>0 frais cachés</Text>
