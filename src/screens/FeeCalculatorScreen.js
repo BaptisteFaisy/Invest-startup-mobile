@@ -207,7 +207,7 @@ export default function FeeCalculatorScreen() {
         <Text style={s.heroTitle}>Calculateur de frais</Text>
         <View style={s.pillRow}>
           <View style={s.pillGreen}>
-            <Text style={s.pillGreenTxt}>La plateforme avec le moins de frais en France</Text>
+            <Text style={s.pillGreenTxt}>La plateforme de VC avec les frais les plus bas de France.</Text>
           </View>
           <View style={s.pillMuted}>
             <Text style={s.pillMutedTxt}>0 frais cachés</Text>

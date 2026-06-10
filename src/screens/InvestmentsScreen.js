@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 const BG    = '#f5f4f0';
 const WHITE = '#09090b';
@@ -16,7 +17,7 @@ export default function InvestmentsScreen() {
       </View>
 
       <View style={s.card}>
-        <Text style={s.emoji}>📊</Text>
+        <Ionicons name="trending-up-outline" size={36} color={MUTED} />
         <Text style={s.title}>Vous n'avez pas encore investi</Text>
         <Text style={s.sub}>Vos investissements apparaîtront{'\n'}ici dès votre premier placement.</Text>
       </View>
@@ -62,7 +63,7 @@ const s = StyleSheet.create({
     alignItems: 'center',
     gap: 10,
   },
-  emoji: { fontSize: 32, marginBottom: 4 },
+  icon: { marginBottom: 4 },
   title: { fontSize: 16, fontWeight: '800', color: WHITE, textAlign: 'center', letterSpacing: -0.2 },
   sub:   { fontSize: 13, color: MUTED, textAlign: 'center', lineHeight: 20 },
 });
