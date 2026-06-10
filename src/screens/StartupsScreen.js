@@ -85,8 +85,8 @@ const s = StyleSheet.create({
   errorTxt:       { fontSize: 13, color: MUTED },
 
   brand:    { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  brandImg: { width: 28, height: 28, resizeMode: 'contain', tintColor: '#09090b' },
-  brandTxt: { fontFamily: 'Archivo_700Bold', fontSize: 16, fontWeight: '700', letterSpacing: 3, color: WHITE, textTransform: 'uppercase' },
+  brandImg: { width: 20, height: 20, resizeMode: 'contain', tintColor: '#09090b' },
+  brandTxt: { fontFamily: 'Archivo_700Bold', fontSize: 13, fontWeight: '700', letterSpacing: 3, color: WHITE, textTransform: 'uppercase' },
 
   bubble:      { backgroundColor: 'rgba(255,255,255,0.06)', borderWidth: 1, borderColor: LINE, borderRadius: 24, paddingHorizontal: 36, paddingVertical: 36, maxWidth: 280, width: '100%', alignItems: 'center', gap: 10 },
   bubbleIcon:  { fontSize: 32, marginBottom: 4 },

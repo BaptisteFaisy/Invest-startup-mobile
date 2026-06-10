@@ -40,10 +40,10 @@ const s = StyleSheet.create({
     alignItems: 'center',
     gap: 10,
   },
-  logoImg: { width: 28, height: 28, resizeMode: 'contain', tintColor: WHITE },
+  logoImg: { width: 20, height: 20, resizeMode: 'contain', tintColor: WHITE },
   logoTxt: {
     fontFamily: 'Archivo_700Bold',
-    fontSize: 16,
+    fontSize: 13,
     fontWeight: '700',
     letterSpacing: 3,
     color: WHITE,

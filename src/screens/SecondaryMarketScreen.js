@@ -32,8 +32,8 @@ const s = StyleSheet.create({
     padding: 24,
   },
   logo:    { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  logoImg: { width: 28, height: 28, resizeMode: 'contain', tintColor: WHITE },
-  logoTxt: { fontFamily: 'Archivo_700Bold', fontSize: 16, fontWeight: '700', letterSpacing: 3, color: WHITE, textTransform: 'uppercase' },
+  logoImg: { width: 20, height: 20, resizeMode: 'contain', tintColor: WHITE },
+  logoTxt: { fontFamily: 'Archivo_700Bold', fontSize: 13, fontWeight: '700', letterSpacing: 3, color: WHITE, textTransform: 'uppercase' },
 
   card: {
     backgroundColor: '#ffffff',

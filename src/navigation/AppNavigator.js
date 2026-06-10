@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import {
   View, Text, Image, TouchableOpacity, StyleSheet,
-  Modal, Pressable, Linking,
+  Modal, Pressable,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -18,6 +18,7 @@ import ProfileScreen         from '../screens/ProfileScreen';
 import LoginScreen           from '../screens/LoginScreen';
 import RegisterScreen        from '../screens/RegisterScreen';
 import FeeCalculatorScreen   from '../screens/FeeCalculatorScreen';
+import ContactScreen         from '../screens/ContactScreen';
 
 // ── Thème clair (écrans) ──────────────────────────────────────────────────────
 const BG   = '#f5f4f0';
@@ -30,8 +31,9 @@ const MENU_LINE  = 'rgba(255,255,255,0.07)';
 const MENU_MUTED = 'rgba(255,255,255,0.35)';
 const MENU_WHITE = '#f4f2ee';
 
-const Stack = createNativeStackNavigator();
-const Tab   = createMaterialTopTabNavigator();
+const Stack    = createNativeStackNavigator();
+const RootStack = createNativeStackNavigator();
+const Tab      = createMaterialTopTabNavigator();
 
 const TABS = [
   { name: 'Investissements', label: 'Investissements',   icon: 'trending-up-outline'     },
@@ -41,7 +43,7 @@ const TABS = [
   { name: 'Compte',          label: 'Compte',            icon: 'person-outline'          },
 ];
 
-function NavModal({ visible, activeIndex, onNavigate, onClose }) {
+function NavModal({ visible, activeIndex, onNavigate, onContact, onClose }) {
   const insets = useSafeAreaInsets();
   const { user } = useAuth();
   return (
@@ -89,7 +91,7 @@ function NavModal({ visible, activeIndex, onNavigate, onClose }) {
           <TouchableOpacity
             style={m.item}
             activeOpacity={0.7}
-            onPress={() => { Linking.openURL('mailto:contact@liquidplus.fr'); onClose(); }}
+            onPress={() => { onContact(); onClose(); }}
           >
             <Ionicons name="mail-outline" size={20} color={MENU_MUTED} />
             <Text style={m.itemTxt}>Nous contacter</Text>
@@ -104,12 +106,20 @@ function NavModal({ visible, activeIndex, onNavigate, onClose }) {
 function CustomTabBar({ state, navigation }) {
   const insets = useSafeAreaInsets();
   const [open, setOpen] = useState(false);
+
+  const handleContact = () => {
+    const parent = navigation.getParent();
+    if (parent) parent.navigate('Contact');
+    else navigation.navigate('Contact');
+  };
+
   return (
     <>
       <NavModal
         visible={open}
         activeIndex={state.index}
         onNavigate={i => navigation.navigate(state.routes[i].name)}
+        onContact={handleContact}
         onClose={() => setOpen(false)}
       />
       <View style={[s.bar, { paddingTop: insets.top || 12 }]}>
@@ -161,26 +171,39 @@ function FeesStack() {
   );
 }
 
+function TabsNavigator() {
+  return (
+    <Tab.Navigator
+      tabBarPosition="top"
+      tabBar={props => <CustomTabBar {...props} />}
+      screenOptions={{
+        swipeEnabled:         true,
+        animationEnabled:     true,
+        tabBarIndicatorStyle: { height: 0, backgroundColor: 'transparent' },
+        tabBarStyle:          { height: 0, overflow: 'hidden' },
+        tabBarPressColor:     'transparent',
+      }}
+    >
+      <Tab.Screen name="Investissements" component={InvestmentsScreen}     />
+      <Tab.Screen name="Startups"        component={StartupsStack}         />
+      <Tab.Screen name="Marche"          component={SecondaryMarketScreen} />
+      <Tab.Screen name="Frais"           component={FeesStack}             />
+      <Tab.Screen name="Compte"          component={ProfileStack}          />
+    </Tab.Navigator>
+  );
+}
+
 export default function AppNavigator() {
   return (
     <NavigationContainer>
-      <Tab.Navigator
-        tabBarPosition="top"
-        tabBar={props => <CustomTabBar {...props} />}
-        screenOptions={{
-          swipeEnabled:         true,
-          animationEnabled:     true,
-          tabBarIndicatorStyle: { height: 0, backgroundColor: 'transparent' },
-          tabBarStyle:          { height: 0, overflow: 'hidden' },
-          tabBarPressColor:     'transparent',
-        }}
-      >
-        <Tab.Screen name="Investissements" component={InvestmentsScreen}     />
-        <Tab.Screen name="Startups"        component={StartupsStack}         />
-        <Tab.Screen name="Marche"          component={SecondaryMarketScreen} />
-        <Tab.Screen name="Frais"           component={FeesStack}             />
-        <Tab.Screen name="Compte"          component={ProfileStack}          />
-      </Tab.Navigator>
+      <RootStack.Navigator screenOptions={{ headerShown: false }}>
+        <RootStack.Screen name="Tabs"    component={TabsNavigator} />
+        <RootStack.Screen
+          name="Contact"
+          component={ContactScreen}
+          options={{ headerShown: true, title: 'Nous contacter', ...headerLight }}
+        />
+      </RootStack.Navigator>
     </NavigationContainer>
   );
 }
