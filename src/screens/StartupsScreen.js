@@ -33,7 +33,6 @@ export default function StartupsScreen({ navigation }) {
           <Text style={s.brandTxt}>LIQUID+</Text>
         </View>
         <View style={s.bubble}>
-          <Text style={s.bubbleIcon}>🚀</Text>
           <Text style={s.bubbleTitle}>Bientôt disponible</Text>
           <Text style={s.bubbleSub}>Les startups sélectionnées par{'\n'}LIQUID+ arrivent prochainement.</Text>
         </View>
