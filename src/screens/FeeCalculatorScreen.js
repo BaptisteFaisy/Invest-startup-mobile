@@ -171,15 +171,11 @@ export default function FeeCalculatorScreen() {
     setSelectedCos(prev => {
       if (prev.includes(idx)) return prev.filter(x => x !== idx);
       if (prev.length >= 3)   return prev;
-      const next = [...prev, idx];
-      const minY = next.reduce((mx, i) => Math.max(mx, COMPANIES[i].minYears), 5);
-      if (years < minY) setYears(minY);
-      return next;
+      return [...prev, idx];
     });
   }
 
-  const minYears = selectedCos.reduce((mx, i) => Math.max(mx, COMPANIES[i].minYears), 5);
-  const effectiveYears = Math.max(years, minYears);
+  const effectiveYears = years;
   const rr = (returnRate || 20) / 100;
 
   const visIdx = [0, ...selectedCos];
@@ -187,7 +183,8 @@ export default function FeeCalculatorScreen() {
   const visCols = visIdx.map(i => COLORS[i]);
   const visRes  = visCos.map(co => {
     if (amount < co.minAmount) return null;
-    return calc(co, amount, Math.max(effectiveYears, co.minYears), rr);
+    if (years < co.minYears)   return null;
+    return calc(co, amount, effectiveYears, rr);
   });
 
   const maxTotal = visRes.reduce((mx, r) => r ? Math.max(mx, r.total) : mx, 1);
@@ -229,6 +226,16 @@ export default function FeeCalculatorScreen() {
                   <View key={i} style={s.barCol}>
                     <View style={s.barMinWrap}>
                       <Text style={s.barMinTxt}>Min.{'\n'}{fmtAmt(co.minAmount)}</Text>
+                    </View>
+                    <Text style={s.barName}>{co.name}</Text>
+                  </View>
+                );
+              }
+              if (years < co.minYears) {
+                return (
+                  <View key={i} style={s.barCol}>
+                    <View style={s.barMinWrap}>
+                      <Text style={s.barMinTxt}>Min.{'\n'}{co.minYears} ans</Text>
                     </View>
                     <Text style={s.barName}>{co.name}</Text>
                   </View>
@@ -315,9 +322,8 @@ export default function FeeCalculatorScreen() {
             <View style={s.horizonRow}>
               <TouchableOpacity
                 style={[s.horizonBtn, effectiveYears === 5 && s.horizonBtnActive]}
-                disabled={minYears > 5}
                 onPress={() => setYears(5)}>
-                <Text style={[s.horizonTxt, effectiveYears === 5 && s.horizonTxtActive, minYears > 5 && { opacity: 0.35 }]}>5 ans</Text>
+                <Text style={[s.horizonTxt, effectiveYears === 5 && s.horizonTxtActive]}>5 ans</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[s.horizonBtn, effectiveYears === 10 && s.horizonBtnActive, s.horizonBtnRight]}
@@ -423,9 +429,9 @@ export default function FeeCalculatorScreen() {
             </View>
 
             {/* Frais d'entrée */}
-            <TableRow label="Frais payé à l'entrée" visRes={visRes} visCos={visCos} visCols={visCols} amount={amount} field="entryDisplay" />
-            <TableRow label="Frais annuels" visRes={visRes} visCos={visCos} visCols={visCols} amount={amount} field="mgmtDisplay" />
-            <TableRow label="Frais de performance" visRes={visRes} visCos={visCos} visCols={visCols} amount={amount} field="perfDisplay" thick />
+            <TableRow label="Frais payé à l'entrée" visRes={visRes} visCos={visCos} visCols={visCols} amount={amount} years={years} field="entryDisplay" />
+            <TableRow label="Frais annuels" visRes={visRes} visCos={visCos} visCols={visCols} amount={amount} years={years} field="mgmtDisplay" />
+            <TableRow label="Frais de performance" visRes={visRes} visCos={visCos} visCols={visCols} amount={amount} years={years} field="perfDisplay" thick />
 
             {/* Sous-jacent */}
             <TableRow label="Frais payé à l'entrée du sous-jacent" fixed="0 %" visCos={visCos} />
@@ -437,7 +443,7 @@ export default function FeeCalculatorScreen() {
               <Text style={[s.tCell, s.tLabelCell, s.tTotalLabel]}>Total frais calculés sur {effectiveYears} ans</Text>
               {visRes.map((r, i) => (
                 <Text key={i} style={[s.tCell, s.tTotalValue, { color: visCos[i].name === 'LIQUID+' ? WHITE : visCols[i] }]}>
-                  {r === null || amount < visCos[i].minAmount ? '—' : fmt(r.total)}
+                  {r === null || amount < visCos[i].minAmount || years < visCos[i].minYears ? '—' : fmt(r.total)}
                 </Text>
               ))}
             </View>
@@ -447,7 +453,7 @@ export default function FeeCalculatorScreen() {
               <Text style={[s.tCell, s.tLabelCell, s.tSavingLabel]}>Économies réalisées avec LIQUID+</Text>
               {visRes.map((r, i) => {
                 if (visCos[i].name === 'LIQUID+') return <Text key={i} style={[s.tCell, s.tSavingValue]}>Référence</Text>;
-                if (r === null || liquidRes === null || amount < visCos[i].minAmount) return <Text key={i} style={[s.tCell, s.tSavingValue]}>—</Text>;
+                if (r === null || liquidRes === null || amount < visCos[i].minAmount || years < visCos[i].minYears) return <Text key={i} style={[s.tCell, s.tSavingValue]}>—</Text>;
                 const saving = r.total - liquidRes.total;
                 return <Text key={i} style={[s.tCell, s.tSavingAmount]}>+ {fmt(saving)}</Text>;
               })}
@@ -458,7 +464,7 @@ export default function FeeCalculatorScreen() {
               <Text style={[s.tCell, s.tLabelCell, s.tSaving2Label]}>Soit LIQUID+ est moins cher de</Text>
               {visRes.map((r, i) => {
                 if (visCos[i].name === 'LIQUID+') return <Text key={i} style={[s.tCell, s.tSaving2Value]}>—</Text>;
-                if (r === null || liquidRes === null || liquidRes.total === 0 || amount < visCos[i].minAmount) return <Text key={i} style={[s.tCell, s.tSaving2Value]}>—</Text>;
+                if (r === null || liquidRes === null || liquidRes.total === 0 || amount < visCos[i].minAmount || years < visCos[i].minYears) return <Text key={i} style={[s.tCell, s.tSaving2Value]}>—</Text>;
                 const times = (r.total / liquidRes.total).toFixed(1);
                 return <Text key={i} style={[s.tCell, s.tSaving2Amount]}>{times}x moins cher</Text>;
               })}
@@ -503,7 +509,7 @@ export default function FeeCalculatorScreen() {
   );
 }
 
-function TableRow({ label, visRes, visCos, visCols, amount, field, fixed, thick }) {
+function TableRow({ label, visRes, visCos, visCols, amount, years, field, fixed, thick }) {
   return (
     <View style={[s.tRow, s.tDataRow, thick && s.tDataRowThick]}>
       <Text style={[s.tCell, s.tLabelCell, s.tRowLabel]}>{label}</Text>
@@ -511,7 +517,7 @@ function TableRow({ label, visRes, visCos, visCols, amount, field, fixed, thick 
         ? visCos.map((_, i) => <Text key={i} style={[s.tCell, s.tRowValue]}>{fixed}</Text>)
         : visRes.map((r, i) => (
             <Text key={i} numberOfLines={2} style={[s.tCell, s.tRowValue]}>
-              {r === null || amount < visCos[i].minAmount ? '—' : r[field]}
+              {r === null || amount < visCos[i].minAmount || years < visCos[i].minYears ? '—' : r[field]}
             </Text>
           ))
       }
