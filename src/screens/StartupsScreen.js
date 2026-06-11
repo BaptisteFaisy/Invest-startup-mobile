@@ -33,7 +33,7 @@ export default function StartupsScreen({ navigation }) {
           <Text style={s.brandTxt}>LIQUID+</Text>
         </View>
         <View style={s.bubble}>
-          <Ionicons name="rocket-outline" size={36} color={MUTED} />
+          <Text style={s.bubbleIcon}>🚀</Text>
           <Text style={s.bubbleTitle}>Bientôt disponible</Text>
           <Text style={s.bubbleSub}>Les startups sélectionnées par{'\n'}LIQUID+ arrivent prochainement.</Text>
         </View>
@@ -90,7 +90,7 @@ const s = StyleSheet.create({
   brandTxt: { fontFamily: 'Archivo_700Bold', fontSize: 13, fontWeight: '700', letterSpacing: 3, color: WHITE, textTransform: 'uppercase' },
 
   bubble:      { backgroundColor: 'rgba(255,255,255,0.06)', borderWidth: 1, borderColor: LINE, borderRadius: 24, paddingHorizontal: 36, paddingVertical: 36, maxWidth: 280, width: '100%', alignItems: 'center', gap: 10 },
-  bubbleIcon:  { marginBottom: 4 },
+  bubbleIcon:  { fontSize: 32, marginBottom: 4 },
   bubbleTitle: { fontSize: 16, fontWeight: '800', color: WHITE, textAlign: 'center', letterSpacing: -0.2 },
   bubbleSub:   { fontSize: 13, color: MUTED, textAlign: 'center', lineHeight: 20 },
 
